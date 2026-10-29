@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NURSEZIM_SHOP | Сән сенің стиліңде</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="#" class="logo">
+    <span class="crown">♕</span>
+    <span>
+      <b>NURSEZIM_SHOP</b>
+      <small>Сән – сенің стиліңде ♡</small>
+    </span>
+  </a>
+
+  <nav>
+    <a href="#home" class="active">Басты бет</a>
+    <a href="#products">Өнімдер</a>
+    <a href="#about">Біз туралы</a>
+    <a href="#contact">Байланыс</a>
+  </nav>
+
+  <div class="header-actions">
+    <input id="searchInput" type="search" placeholder="Өнімді іздеу...">
+    <button class="head-btn" onclick="toggleCart()">♡</button>
+    <button class="head-btn" onclick="toggleCart()">🛒 <sup id="cartCount">0</sup></button>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <div class="hero-text">
+      <span class="tag">♡ Жаңа коллекция</span>
+      <h1>Сәнді болу –<br>өз қолыңнан!</h1>
+      <p>NURSEZIM_SHOP – стильді киім, әдемі аксессуарлар және күнделікті өмірге арналған ерекше бұйымдар.</p>
+      <a href="#products" class="main-btn">Сатып алуды бастау →</a>
+    </div>
+    <div class="hero-image">
+      <div class="circle"></div>
+      <div class="bag">👜</div>
+      <div class="flower">✿</div>
+      <div class="hero-note">Be yourself ♡</div>
+      <div class="new-label">NEW<br><b>2026</b></div>
+    </div>
+  </section>
+
+  <section class="categories">
+    <button class="category active" data-category="Барлығы"><span>✧</span>Барлығы</button>
+    <button class="category" data-category="Киім"><span>♧</span>Киім</button>
+    <button class="category" data-category="Сөмкелер"><span>👜</span>Сөмкелер</button>
+    <button class="category" data-category="Аяқ киім"><span>♡</span>Аяқ киім</button>
+    <button class="category" data-category="Косметика"><span>✿</span>Косметика</button>
+    <button class="category" data-category="Аксессуарлар"><span>◇</span>Аксессуарлар</button>
+    <button class="category" data-category="Гаджеттер"><span>⌚</span>Гаджеттер</button>
+  </section>
+
+  <section class="products-section" id="products">
+    <div class="section-heading">
+      <h2>✨ Танымал өнімдер</h2>
+      <span id="resultCount">Саған арналған таңдаулар</span>
+    </div>
+    <div class="product-grid" id="productGrid"></div>
+  </section>
+
+  <section class="about" id="about">
+    <div class="about-heart">♡</div>
+    <div>
+      <h2>Өзіңе ұнайтын стильді таңда!</h2>
+      <p>Әр күнге арналған әдемі, сәнді және қолжетімді бұйымдар.</p>
+    </div>
+    <a href="#products" class="outline-btn">Каталогты қарау →</a>
+  </section>
+</main>
+
+<footer id="contact">
+  <div class="footer-brand">
+    <div class="logo">
+      <span class="crown">♕</span>
+      <span><b>NURSEZIM_SHOP</b><small>Сән – сенің стиліңде ♡</small></span>
+    </div>
+    <p>© 2026 NURSEZIM_SHOP. Барлық құқық қорғалған.</p>
+  </div>
+
+  <div>
+    <h3>Байланыс</h3>
+    <p>☎ +7 700 123 45 67</p>
+    <p>◎ @nursezim_shop</p>
+    <p>✉ nursezimshop@gmail.com</p>
+  </div>
+
+  <div>
+    <h3>Ақпарат</h3>
+    <a href="#products">Жеткізу</a>
+    <a href="#products">Қайтару және айырбастау</a>
+    <a href="#contact">Жиі қойылатын сұрақтар</a>
+  </div>
+
+  <div>
+    <h3>Әлеуметтік желі</h3>
+    <div class="socials"><a href="#contact">◎</a><a href="#contact">♪</a><a href="#contact">➤</a></div>
+    <p class="footer-note">Сен ерекше жансың ♡</p>
+  </div>
+</footer>
+
+<aside class="cart-panel" id="cartPanel">
+  <div class="cart-heading">
+    <h2>🛒 Себет</h2>
+    <button onclick="toggleCart()" class="close-btn">×</button>
+  </div>
+  <div id="cartItems" class="cart-items">
+    <p class="empty-cart">Себетіңіз әзірге бос ♡</p>
+  </div>
+  <div class="cart-bottom">
+    <div class="total-row">
+      <span>Жалпы сомасы</span>
+      <strong id="cartTotal">0 ₸</strong>
+    </div>
+    <button class="main-btn checkout" onclick="checkout()">Тапсырысты рәсімдеу →</button>
+    <small>Демо нұсқа. Нақты төлем жүйесі қосылмаған.</small>
+  </div>
+</aside>
+
+<div class="overlay" id="overlay" onclick="toggleCart()"></div>
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
