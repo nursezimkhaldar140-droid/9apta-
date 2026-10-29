@@ -1,275 +1,222 @@
 
 const products = [
-  {
-    id: 1,
-    name: "Сөмке (Velora)",
-    desc: "Стильді әрі ыңғайлы",
-    price: 18990,
-    category: "Сөмкелер",
-    emoji: "👜",
-    badge: "Хит",
-    rating: "4.8 (124)"
-  },
-  {
-    id: 2,
-    name: "Кроссовка",
-    desc: "Күнделікті қолдануға",
-    price: 14990,
-    category: "Аяқ киім",
-    emoji: "👟",
-    badge: "Жаңа",
-    rating: "4.7 (98)"
-  },
-  {
-    id: 3,
-    name: "Smart сағат",
-    desc: "Денсаулық пен стиль",
-    price: 24990,
-    old: 29990,
-    category: "Гаджеттер",
-    emoji: "⌚",
-    badge: "Скидка",
-    rating: "4.6 (76)"
-  },
-  {
-    id: 4,
-    name: "Парфюм жиынтығы",
-    desc: "Әр сәтке арналған хош иіс",
-    price: 12990,
-    category: "Косметика",
-    emoji: "🧴",
-    badge: "Хит",
-    rating: "4.9 (210)"
-  },
-  {
-    id: 5,
-    name: "Жұмсақ худи",
-    desc: "Жайлы әрі сәнді",
-    price: 16990,
-    category: "Киім",
-    emoji: "🧥",
-    badge: "Жаңа",
-    rating: "4.8 (64)"
-  },
-  {
-    id: 6,
-    name: "Көзілдірік",
-    desc: "Образыңа ерекше сән береді",
-    price: 7990,
-    category: "Аксессуарлар",
-    emoji: "🕶️",
-    badge: "Таңдау",
-    rating: "4.7 (52)"
-  },
-  {
-    id: 7,
-    name: "Әшекей жиынтығы",
-    desc: "Нәзік әрі әдемі",
-    price: 9990,
-    category: "Аксессуарлар",
-    emoji: "💎",
-    badge: "Хит",
-    rating: "4.9 (87)"
-  },
-  {
-    id: 8,
-    name: "Ерін далабы",
-    desc: "Күнделікті макияжға",
-    price: 5990,
-    category: "Косметика",
-    emoji: "💄",
-    badge: "Жаңа",
-    rating: "4.6 (41)"
-  }
+  {id:1, name:"Жұмсақ кардиган", category:"Киім", price:12900, emoji:"🧥", bg:"#f4e0e8"},
+  {id:2, name:"Минималист сөмке", category:"Сөмкелер", price:18500, emoji:"👜", bg:"#eee4fa"},
+  {id:3, name:"Күнделікті кроссовка", category:"Аяқ киім", price:21900, emoji:"👟", bg:"#e4edf4"},
+  {id:4, name:"Күтім жиынтығы", category:"Косметика", price:8900, emoji:"🧴", bg:"#f8e8d9"},
+  {id:5, name:"Әдемі сырға", category:"Аксессуарлар", price:4900, emoji:"💎", bg:"#f6e1e8"},
+  {id:6, name:"Сымсыз құлаққап", category:"Гаджеттер", price:15900, emoji:"🎧", bg:"#e4e0f5"},
+  {id:7, name:"Классикалық жейде", category:"Киім", price:10900, emoji:"👚", bg:"#f3e9d9"},
+  {id:8, name:"Көзілдірік", category:"Аксессуарлар", price:6500, emoji:"🕶️", bg:"#e0ece8"}
 ];
 
+let selectedCategory = "Барлығы";
 let cart = [];
-let activeCategory = "Барлығы";
+let authMode = "login";
 
-const grid = document.getElementById("productGrid");
-const searchInput = document.getElementById("searchInput");
-
-function money(number) {
-  return number.toLocaleString("ru-RU") + " ₸";
-}
+const $ = id => document.getElementById(id);
+const money = value => value.toLocaleString("kk-KZ") + " ₸";
 
 function renderProducts() {
-  const query = searchInput.value.trim().toLowerCase();
-
-  const filtered = products.filter(product => {
-    const categoryMatch =
-      activeCategory === "Барлығы" ||
-      product.category === activeCategory;
-
-    const searchMatch =
-      product.name.toLowerCase().includes(query) ||
-      product.desc.toLowerCase().includes(query);
-
+  const query = $("searchInput").value.trim().toLocaleLowerCase("kk");
+  const shown = products.filter(product => {
+    const categoryMatch = selectedCategory === "Барлығы" ||
+      product.category === selectedCategory;
+    const searchMatch = product.name.toLocaleLowerCase("kk").includes(query) ||
+      product.category.toLocaleLowerCase("kk").includes(query);
     return categoryMatch && searchMatch;
   });
 
-  document.getElementById("resultCount").textContent =
-    `${filtered.length} өнім табылды`;
-
-  if (filtered.length === 0) {
-    grid.innerHTML = "<p>Бұл іздеу бойынша өнім табылмады ♡</p>";
-    return;
-  }
-
-  grid.innerHTML = filtered.map(product => `
+  $("productGrid").innerHTML = shown.map(product => `
     <article class="product-card">
-      <div class="product-visual">
-        <span class="product-badge ${
-          product.badge === "Жаңа" ? "new" : ""
-        }">${product.badge}</span>
-
-        <button class="favorite"
-          aria-label="Таңдаулыға қосу"
-          onclick="showToast('Таңдаулылар бөлімі жақында қосылады ♡')">
-          ♡
-        </button>
-
-        <span class="product-emoji">${product.emoji}</span>
+      <div class="product-art" style="background:${product.bg}">
+        ${product.emoji}
       </div>
-
       <div class="product-info">
+        <p class="category">${product.category}</p>
         <h3>${product.name}</h3>
-        <p>${product.desc}</p>
-
-        <div class="price-row">
+        <div class="product-bottom">
           <span class="price">${money(product.price)}</span>
-          ${
-            product.old
-              ? `<span class="old-price">${money(product.old)}</span>`
-              : ""
-          }
+          <button class="add-btn" data-add="${product.id}" aria-label="Себетке қосу">+</button>
         </div>
-
-        <button class="add-btn" onclick="addToCart(${product.id})">
-          🛒 Себетке қосу
-        </button>
-
-        <div class="rating">★ <span>${product.rating}</span></div>
       </div>
     </article>
   `).join("");
-}
 
-function addToCart(id) {
-  const item = cart.find(product => product.id === id);
-
-  if (item) {
-    item.qty++;
-  } else {
-    cart.push({ id, qty: 1 });
-  }
-
-  renderCart();
-  showToast("Өнім себетке қосылды ♡");
-}
-
-function changeQty(id, amount) {
-  const item = cart.find(product => product.id === id);
-
-  if (!item) return;
-
-  item.qty += amount;
-
-  if (item.qty <= 0) {
-    cart = cart.filter(product => product.id !== id);
-  }
-
-  renderCart();
-}
-
-function removeItem(id) {
-  cart = cart.filter(product => product.id !== id);
-  renderCart();
+  $("emptyMessage").hidden = shown.length > 0;
 }
 
 function renderCart() {
-  const count = cart.reduce((sum, item) => sum + item.qty, 0);
+  $("cartCount").textContent = cart.reduce((sum, item) => sum + item.qty, 0);
 
-  const total = cart.reduce((sum, item) => {
-    const product = products.find(p => p.id === item.id);
-    return sum + product.price * item.qty;
-  }, 0);
-
-  document.getElementById("cartCount").textContent = count;
-  document.getElementById("cartTotal").textContent = money(total);
-
-  const cartItems = document.getElementById("cartItems");
-
-  if (cart.length === 0) {
-    cartItems.innerHTML =
-      '<p class="empty-cart">Себетіңіз әзірге бос ♡</p>';
-    return;
-  }
-
-  cartItems.innerHTML = cart.map(item => {
-    const product = products.find(p => p.id === item.id);
-
-    return `
-      <div class="cart-item">
-        <div class="cart-thumb">${product.emoji}</div>
-
-        <div>
-          <h4>${product.name}</h4>
-          <p>${money(product.price)}</p>
-
-          <div class="qty">
-            <button onclick="changeQty(${product.id}, -1)">−</button>
-            <span>${item.qty}</span>
-            <button onclick="changeQty(${product.id}, 1)">+</button>
-          </div>
-        </div>
-
-        <button class="remove"
-          onclick="removeItem(${product.id})">×</button>
+  $("cartItems").innerHTML = cart.length ? cart.map(item => `
+    <div class="cart-row">
+      <h4>${item.emoji} ${item.name}</h4>
+      <p>${money(item.price)} × ${item.qty}</p>
+      <div class="quantity">
+        <button data-qty="${item.id}" data-change="-1">−</button>
+        <span>${item.qty}</span>
+        <button data-qty="${item.id}" data-change="1">+</button>
       </div>
-    `;
-  }).join("");
+      <button class="remove" data-remove="${item.id}">Өшіру</button>
+    </div>
+  `).join("") : "<p>Себет әзірге бос.</p>";
+
+  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  $("cartTotal").textContent = money(total);
 }
 
-function toggleCart() {
-  document.getElementById("cartPanel").classList.toggle("open");
-  document.getElementById("overlay").classList.toggle("show");
+function toast(message) {
+  const element = $("toast");
+  element.textContent = message;
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => element.textContent = "", 2500);
 }
 
-function showToast(message) {
-  const toast = document.getElementById("toast");
-
-  toast.textContent = message;
-  toast.classList.add("show");
-
-  clearTimeout(window.toastTimer);
-
-  window.toastTimer = setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2300);
+function openCart() {
+  $("cartPanel").classList.add("open");
+  $("shade").classList.add("open");
 }
 
-function checkout() {
-  if (cart.length === 0) {
-    showToast("Алдымен себетке өнім қосыңыз ♡");
-    return;
+function closeCart() {
+  $("cartPanel").classList.remove("open");
+  $("shade").classList.remove("open");
+}
+
+function openAuth(mode) {
+  authMode = mode;
+  const registering = mode === "register";
+
+  $("authTitle").textContent = registering ? "Жаңа аккаунт" : "Аккаунтқа кіру";
+  $("authSubtitle").textContent = registering
+    ? "Тіркелу үшін мәліметтеріңізді енгізіңіз."
+    : "Дүкенге кіру үшін мәліметтеріңізді енгізіңіз.";
+  $("authSubmit").textContent = registering ? "Тіркелу" : "Кіру";
+  $("switchText").textContent = registering
+    ? "Аккаунтыңыз бар ма?"
+    : "Аккаунтыңыз жоқ па?";
+  $("switchAuth").textContent = registering ? "Кіру" : "Тіркелу";
+  $("authName").hidden = !registering;
+  $("nameLabel").hidden = !registering;
+  $("authName").required = registering;
+  $("authBackdrop").classList.add("open");
+}
+
+function closeAuth() {
+  $("authBackdrop").classList.remove("open");
+}
+
+$("productGrid").addEventListener("click", event => {
+  const button = event.target.closest("[data-add]");
+  if (!button) return;
+
+  const product = products.find(item => item.id === Number(button.dataset.add));
+  const existing = cart.find(item => item.id === product.id);
+
+  if (existing) existing.qty++;
+  else cart.push({...product, qty:1});
+
+  renderCart();
+  toast("Тауар себетке қосылды!");
+});
+
+$("filters").addEventListener("click", event => {
+  const button = event.target.closest("[data-category]");
+  if (!button) return;
+
+  selectedCategory = button.dataset.category;
+  document.querySelectorAll(".filter").forEach(filter => {
+    filter.classList.toggle("active", filter === button);
+  });
+  renderProducts();
+});
+
+$("searchInput").addEventListener("input", renderProducts);
+
+$("cartItems").addEventListener("click", event => {
+  const removeButton = event.target.closest("[data-remove]");
+  const qtyButton = event.target.closest("[data-qty]");
+
+  if (removeButton) {
+    cart = cart.filter(item => item.id !== Number(removeButton.dataset.remove));
   }
 
-  showToast("Демо нұсқа: нақты төлем жүйесі қосылмаған.");
-}
+  if (qtyButton) {
+    const item = cart.find(product => product.id === Number(qtyButton.dataset.qty));
+    if (item) item.qty += Number(qtyButton.dataset.change);
+    cart = cart.filter(product => product.qty > 0);
+  }
 
-searchInput.addEventListener("input", renderProducts);
+  renderCart();
+});
 
-document.querySelectorAll(".category").forEach(button => {
-  button.addEventListener("click", () => {
-    document.querySelector(".category.active")
-      .classList.remove("active");
+$("cartOpen").addEventListener("click", openCart);
+$("cartClose").addEventListener("click", closeCart);
+$("shade").addEventListener("click", closeCart);
 
-    button.classList.add("active");
-    activeCategory = button.dataset.category;
+$("checkoutBtn").addEventListener("click", () => {
+  if (cart.length === 0) {
+    toast("Алдымен себетке тауар қосыңыз.");
+  } else {
+    toast("Бұл оқу жобасында нақты тапсырыс беру қосылмаған.");
+  }
+});
 
-    renderProducts();
-  });
+$("loginOpen").addEventListener("click", () => openAuth("login"));
+$("registerOpen").addEventListener("click", () => openAuth("register"));
+$("authClose").addEventListener("click", closeAuth);
+
+$("authBackdrop").addEventListener("click", event => {
+  if (event.target === $("authBackdrop")) closeAuth();
+});
+
+$("switchAuth").addEventListener("click", () => {
+  openAuth(authMode === "login" ? "register" : "login");
+});
+
+$("authForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const name = $("authName").value.trim();
+  const email = $("authEmail").value.trim().toLowerCase();
+  const password = $("authPassword").value;
+  let users = [];
+
+  try {
+    users = JSON.parse(localStorage.getItem("nursezimUsers") || "[]");
+  } catch {
+    users = [];
+  }
+
+  if (authMode === "register") {
+    if (!name) return toast("Атыңызды енгізіңіз.");
+    if (users.some(user => user.email === email)) {
+      return toast("Бұл пошта бұрын тіркелген.");
+    }
+
+    users.push({name, email, password});
+    localStorage.setItem("nursezimUsers", JSON.stringify(users));
+    $("authForm").reset();
+    closeAuth();
+    toast("Тіркелу сәтті аяқталды!");
+  } else {
+    const user = users.find(user =>
+      user.email === email && user.password === password
+    );
+
+    if (!user) return toast("Пошта немесе құпиясөз қате.");
+
+    $("authForm").reset();
+    closeAuth();
+    toast("Қош келдіңіз, " + user.name + "!");
+  }
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") {
+    closeCart();
+    closeAuth();
+  }
 });
 
 renderProducts();
